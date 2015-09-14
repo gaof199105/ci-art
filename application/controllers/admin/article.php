@@ -14,7 +14,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
          * 成功跳转
          */
         public function index(){
-            echo "success";
+            //载入分页
+            $this->load->library('pagination');
+            $per_page=3;
+            $config['base_url'] = site_url('admin/article/index');
+            $config['total_rows'] = $this->db->count_all_results('article');
+            $config['per_page'] = $per_page;
+            $config['next_link'] = '下一页';
+            $config['last_link'] = '最后';
+            $config['first_link'] = '第一页';
+            $config['prev_link'] = '上一页';
+            $config['uri_segment']=4;
+
+            $this->pagination->initialize($config);
+
+            $data['links'] =$this->pagination->create_links();
+          //  p($data);die;
+            $offset = $this->uri->segment(4);
+            $this->db->limit($per_page,$offset);
+            $data['article']=$this->art->article_category();
+            //p($data);die;
+            $this->load->view('admin/check_article.html',$data);
+            //echo "success";
         }
         /*
         
